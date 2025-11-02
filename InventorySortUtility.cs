@@ -1,11 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using Duckov.UI;
 using Duckov.Utilities;
 using ItemStatsSystem;
-using UnityEngine;
 
 namespace tinygrox.DuckovMods.GiveMeInventoryFilter
 {

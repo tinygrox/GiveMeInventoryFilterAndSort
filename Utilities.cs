@@ -246,7 +246,7 @@ namespace tinygrox.DuckovMods.GiveMeInventoryFilter
                 return item => false;
             }
 
-            return (Item e) =>
+            return e =>
             {
                 if (!e || e.Tags == null)
                 {
@@ -257,6 +257,28 @@ namespace tinygrox.DuckovMods.GiveMeInventoryFilter
             };
         }
 
+        public static T FindComponentInChild<T>(Transform parent) where T : Component
+        {
+            foreach (Transform child in parent)
+            {
+                T component = child.GetComponent<T>();
+                if (component)
+                {
+                    return component;
+                }
+            }
+
+            foreach (Transform child in parent)
+            {
+                T component = FindComponentInChild<T>(child);
+                if (component)
+                {
+                    return component;
+                }
+            }
+
+            return null;
+        }
         public static void RefreshDropdownActive(GameObject dropdownObj, bool isShow)
         {
             if (dropdownObj)
@@ -264,9 +286,23 @@ namespace tinygrox.DuckovMods.GiveMeInventoryFilter
                 dropdownObj.SetActive(isShow);
             }
         }
-        public static void AddDropdown(Transform parent, InventoryDisplay inventoryDisplay, bool showSpace = true, bool showDropdown = true)
+        public static void AddDropdown(Transform inventoryDisplayTransform, InventoryDisplay inventoryDisplay, bool showSpace = true, bool showDropdown = true)
         {
             ModLogger.Log.Info($"{inventoryDisplay.Target.DisplayName} showSpace:{showSpace}, showDropdown: {showDropdown}");
+            // 我看过了只有 TitleBar (1) 有这个 HorizontalLayoutGroup
+            var titleBar1 = inventoryDisplayTransform.GetComponentInChildren<HorizontalLayoutGroup>();
+            if (!titleBar1)
+            {
+                return;
+            }
+            Transform parent = titleBar1.transform;
+            if (parent.GetComponentInChildren<DropOptionsLocalization>())
+            {
+                var existingDropdown = parent.GetComponentInChildren<DropOptionsLocalization>().gameObject;
+                RefreshDropdownActive(existingDropdown, showDropdown);
+                return;
+            }
+
             var dropdownObj = parent.Find($"Filter_Dropdown")?.gameObject;
             if (dropdownObj)
             {

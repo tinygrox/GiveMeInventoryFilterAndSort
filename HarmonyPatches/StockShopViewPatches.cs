@@ -1,14 +1,6 @@
 using System;
-using System.Threading;
 using Cysharp.Threading.Tasks;
-using Duckov.Economy.UI;
 using Duckov.UI;
-using Duckov.Utilities;
-using FMOD;
-using ItemStatsSystem;
-using UnityEngine;
-using UnityEngine.UI;
-using Debug = UnityEngine.Debug;
 // ReSharper disable InconsistentNaming
 
 namespace tinygrox.DuckovMods.GiveMeInventoryFilter.HarmonyPatches

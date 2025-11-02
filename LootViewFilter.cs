@@ -118,7 +118,8 @@ namespace tinygrox.DuckovMods.GiveMeInventoryFilter
 
             await UniTask.WaitForEndOfFrame(this);
             if(!LootView.Instance) return;
-            Utilities.AddDropdown(filterParent.Find("TitleBar (1)"), targetInventoryDisplay, showSpace, showDropdown);
+            // Utilities.AddDropdown(filterParent.Find("TitleBar (1)"), targetInventoryDisplay, showSpace, showDropdown);
+            Utilities.AddDropdown(filterParent, targetInventoryDisplay, showSpace, showDropdown);
         }
 
         private void OnDisable()

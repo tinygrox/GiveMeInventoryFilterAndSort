@@ -67,11 +67,12 @@ namespace tinygrox.DuckovMods.GiveMeInventoryFilter
                     return stockShopView;
                 });
 
-                var filterParent = stockShopView.transform.Find("Content/SelfStuff/Content/Scroll View/Viewport/Content/InventoryDisplay_Trading_Storage");
+                Transform filterParent = stockShopView.transform.Find("Content/SelfStuff/Content/Scroll View/Viewport/Content/InventoryDisplay_Trading_Storage");
                 await UniTask.WaitUntil(() => filterParent);
 
                 InventoryDisplay playerStorageDisplay = GetPlayerStorageDisplay(stockShopView);
                 SetupFilterGameObject(filterParent, playerStorageDisplay).Forget();
+
                 filterParent = stockShopView.transform.Find("Content/SelfStuff/Content/Scroll View/Viewport/Content/InventoryDisplay_Trading");
                 await UniTask.WaitUntil(() => filterParent);
 
@@ -97,11 +98,15 @@ namespace tinygrox.DuckovMods.GiveMeInventoryFilter
             await UniTask.WaitUntil(() => targetInventoryDisplay && targetInventoryDisplay.Target);
 
             if(!StockShopView.Instance) return;
+
             if (filterParent.transform.Find($"GiveMeInventoryFilter_FilterDisplay({filterParent.name})"))
             {
                 return;
             }
+            Utilities.AddDropdown(filterParent, targetInventoryDisplay, showSpace, showDropdown);
+
             var fliterDisplayObj = Instantiate(UIPrefabs.FilterDisplay, filterParent);
+
             fliterDisplayObj.name = $"GiveMeInventoryFilter_FilterDisplay({filterParent.name})";
             if (filterParent.TryGetComponent(out VerticalLayoutGroup vlg))
             {
@@ -119,7 +124,7 @@ namespace tinygrox.DuckovMods.GiveMeInventoryFilter
                 // ModLogger.Log.Error()
                 // Debug.Log("[GiveMeInventoryFilter] s_selectFilterEntryMethod Finished");
             }
-            Utilities.AddDropdown(filterParent.Find("TitleBar (1)"), targetInventoryDisplay, showSpace, showDropdown);
+            // Utilities.AddDropdown(filterParent.Find("TitleBar (1)"), targetInventoryDisplay, showSpace, showDropdown);
         }
 
         private void OnDisable()
