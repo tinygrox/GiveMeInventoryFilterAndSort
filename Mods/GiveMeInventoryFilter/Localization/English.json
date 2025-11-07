@@ -1,0 +1,13 @@
+{
+  "GiveMeInventoryFilter_Default": "Vanilla Sort",
+  "GiveMeInventoryFilter_OrderByValue": "Value (Desc)",
+  "GiveMeInventoryFilter_OrderByValueAscending": "Value (Asc)",
+  "GiveMeInventoryFilter_OrderByWeight": "Weight (Desc)",
+  "GiveMeInventoryFilter_OrderByWeightAscending": "Weight (Asc)",
+  "GiveMeInventoryFilter_OrderByValueWeightRatio": "V/W Ratio (Desc)",
+  "GiveMeInventoryFilter_OrderByValueWeightRatioAscending": "V/W Ratio (Asc)",
+  "GiveMeInventoryFilter_OrderByRarity": "Quality (Desc)",
+  "GiveMeInventoryFilter_OrderByRarityAscending": "Quality (Asc)",
+  "GiveMeInventoryFilter_OrderByDurbility":"Durability (Desc)",
+  "GiveMeInventoryFilter_OrderByDurbilityAscending": "Durability (Asc)"
+}

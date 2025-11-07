@@ -1,23 +1,17 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using Duckov.Economy.UI;
 using Duckov.UI;
-using ItemStatsSystem;
-using SodaCraft.Localizations;
-using TMPro;
-using Unity.VisualScripting;
+using tinygrox.DuckovMods.SharedCode;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace tinygrox.DuckovMods.GiveMeInventoryFilter
 {
     // 计划结果：在左侧的仓库顶部设置一个 gameobject 用于挂载 InventoryFilterDisplay
-    // 思路：1. 先创建一个 gameobject 在左侧仓库最上方， setParent 为大的容器
-    // 2. 给其下的每个 Inventory 的 GameObject 都挂上 InventoryFilterProvider
-    // 3. 配置 InventoryFilterDisplay 的 InventoryFilterDisplay.provider、InventoryFilterDisplay.targetDisplay
+    // 思路：1. 先创建一个 gameobject 在左侧仓库最上方， setParent 为大的容器 | 后来还是放弃了，这样需要同时控制多个背包，InventoryFilterDisplay 默认不支持，不想新写
+    // 2. 给其下的每个 Inventory 的 GameObject 都挂上 InventoryFilterProvider | 不用了，背包不需要显示
+    // 3. 配置 InventoryFilterDisplay 的 InventoryFilterDisplay.provider、InventoryFilterDisplay.targetDisplay | 不需要了，InventoryFilterDisplay 会全自动 Setup
     public class StockShopViewInventoryFilter: MonoBehaviour
     {
         // public static readonly Func<InventoryFilterDisplay, InventoryFilterProvider> GetProvider = ReflectionHelper.CreateFieldGetter<InventoryFilterDisplay, InventoryFilterProvider>("provider");
@@ -120,7 +114,7 @@ namespace tinygrox.DuckovMods.GiveMeInventoryFilter
                 // s_fliterDisplayObj.transform.SetSiblingIndex(targetInventoryDisplay.transform.GetSiblingIndex());
                 fliterDisplayObj.transform.SetAsFirstSibling();
                 iFdComp.Setup(targetInventoryDisplay);
-                SelectFilterEntryMethod(iFdComp, new object[] { 0 });
+                SelectFilterEntryMethod(iFdComp, [0]);
                 // ModLogger.Log.Error()
                 // Debug.Log("[GiveMeInventoryFilter] s_selectFilterEntryMethod Finished");
             }

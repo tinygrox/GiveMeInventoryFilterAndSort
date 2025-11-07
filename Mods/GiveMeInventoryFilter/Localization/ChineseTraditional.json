@@ -1,0 +1,13 @@
+{
+  "GiveMeInventoryFilter_Default": "原版排序",
+  "GiveMeInventoryFilter_OrderByValue": "價值降序",
+  "GiveMeInventoryFilter_OrderByValueAscending": "價值升序",
+  "GiveMeInventoryFilter_OrderByWeight": "重量降序",
+  "GiveMeInventoryFilter_OrderByWeightAscending": "重量升序",
+  "GiveMeInventoryFilter_OrderByValueWeightRatio": "價重比降序",
+  "GiveMeInventoryFilter_OrderByValueWeightRatioAscending": "價重比升序",
+  "GiveMeInventoryFilter_OrderByRarity": "稀有度降序",
+  "GiveMeInventoryFilter_OrderByRarityAscending": "稀有度升序",
+  "GiveMeInventoryFilter_OrderByDurbility":"耐久度降序",
+  "GiveMeInventoryFilter_OrderByDurbilityAscending": "耐久度升序"
+}

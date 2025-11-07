@@ -1,0 +1,10 @@
+{
+  "GiveMeInventoryFilter_OrderByValue": "가치",
+  "GiveMeInventoryFilter_OrderByValueAscending": "가치(Asc)",
+  "GiveMeInventoryFilter_OrderByWeight": "무게",
+  "GiveMeInventoryFilter_OrderByWeightAscending": "무게(Asc)",
+  "GiveMeInventoryFilter_OrderByValueWeightRatio": "가치/무게(비율)",
+  "GiveMeInventoryFilter_OrderByValueWeightRatioAscending": "가치/무게(Asc)",
+  "GiveMeInventoryFilter_OrderByRarity": "희귀(내림차순)",
+  "GiveMeInventoryFilter_OrderByRarityAscending": "희귀(오름차순)"
+}

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Duckov.UI;
 using Duckov.Utilities;
 using ItemStatsSystem;
+using tinygrox.DuckovMods.SharedCode;
 
 namespace tinygrox.DuckovMods.GiveMeInventoryFilter
 {
@@ -17,11 +18,12 @@ namespace tinygrox.DuckovMods.GiveMeInventoryFilter
             itemsToDestroy = new List<Item>();
             if (items == null || items.Count == 0) return new List<Item>();
 
-            var openQueues = new Dictionary<int, Queue<Item>>();
+            // var openQueues = new Dictionary<int, Queue<Item>>();
+            var openQueues = new Dictionary<(int TypeID, string FromInfoKey), Queue<Item>>();
             var finalResult = new List<Item>();
-
             foreach (var current in items)
             {
+
                 if (!current || current.StackCount <= 0) continue;
 
                 if (!current.Stackable)
@@ -30,7 +32,10 @@ namespace tinygrox.DuckovMods.GiveMeInventoryFilter
                     continue;
                 }
 
-                if (openQueues.TryGetValue(current.TypeID, out var queue))
+                var currentItemMergeKey = (current.TypeID, current.FromInfoKey);
+
+                // if (openQueues.TryGetValue(current.TypeID, out var queue))
+                if (openQueues.TryGetValue(currentItemMergeKey, out var queue))
                 {
                     while (queue.Count > 0 && current.StackCount > 0)
                     {
@@ -44,7 +49,8 @@ namespace tinygrox.DuckovMods.GiveMeInventoryFilter
 
                         if (target.StackCount >= target.MaxStackCount) queue.Dequeue();
                     }
-                    if (queue.Count == 0) openQueues.Remove(current.TypeID);
+                    // if (queue.Count == 0) openQueues.Remove(current.TypeID);
+                    if (queue.Count == 0) openQueues.Remove(currentItemMergeKey);
                 }
 
                 if (current.StackCount > 0)
@@ -52,10 +58,12 @@ namespace tinygrox.DuckovMods.GiveMeInventoryFilter
                     finalResult.Add(current);
                     if (current.StackCount < current.MaxStackCount)
                     {
-                        if (!openQueues.TryGetValue(current.TypeID, out var q2))
+                        // if (!openQueues.TryGetValue(current.TypeID, out var q2))
+                        if (!openQueues.TryGetValue(currentItemMergeKey, out var q2))
                         {
                             q2 = new Queue<Item>();
-                            openQueues[current.TypeID] = q2;
+                            // openQueues[current.TypeID] = q2;
+                            openQueues[currentItemMergeKey] = q2;
                         }
                         q2.Enqueue(current);
                     }

@@ -5,6 +5,7 @@ using Cysharp.Threading.Tasks;
 using Duckov.Economy.UI;
 using Duckov.UI;
 using SodaCraft.Localizations;
+using tinygrox.DuckovMods.SharedCode;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -78,24 +79,24 @@ namespace tinygrox.DuckovMods.GiveMeInventoryFilter
                 Transform lootTargetInventoryDisplayTransform = lootTargetInventoryDisplay.transform;
                 bool lootTargetInventoryDisplayshowSpace = lootTargetInventoryDisplay.Editable && !lootTargetInventoryDisplay.ShowSortButton;
                 bool lootTargetInventoryDisplayshowDropdown = (lootTargetInventoryDisplay.Target == PlayerStorage.Inventory) && lootTargetInventoryDisplay.Editable;
-                ModLogger.Log.Info($"lootTargetInventoryDisplayshowSpace:{lootTargetInventoryDisplayshowSpace}");
-                ModLogger.Log.Info($"lootTargetInventoryDisplayshowDropdown: {lootTargetInventoryDisplayshowDropdown}");
+                ModLogger.Log.Debug($"lootTargetInventoryDisplayshowSpace:{lootTargetInventoryDisplayshowSpace}");
+                ModLogger.Log.Debug($"lootTargetInventoryDisplayshowDropdown: {lootTargetInventoryDisplayshowDropdown}");
 
                 if (IsDropdownExisted(characterInventoryDisplayTransorm, "TitleBar (1)/Filter_Dropdown") &&
                     IsDropdownExisted(lootTargetInventoryDisplayTransform, "TitleBar (1)/Filter_Dropdown"))
                 {
                     Utilities.RefreshDropdownActive(lootTargetInventoryDisplayTransform.Find("TitleBar (1)/Filter_Dropdown").gameObject, lootTargetInventoryDisplayshowDropdown);
                     timer.Stop();
-                    ModLogger.Log.Info($"[提前结束]运行时长：{timer.ElapsedMilliseconds}ms");
+                    ModLogger.Log.Debug($"[提前结束]运行时长：{timer.ElapsedMilliseconds}ms");
                     return;
                 }
-                ModLogger.Log.Info($"Checking conditions for lootTargetInventoryDisplay({characterInventoryDisplay.Target?.DisplayName}): Editable={characterInventoryDisplay.Editable} | ShowSortButton={characterInventoryDisplay.ShowSortButton}");
-                ModLogger.Log.Info($"Checking conditions for lootTargetInventoryDisplay({lootTargetInventoryDisplay.Target?.DisplayName}): Editable={lootTargetInventoryDisplay.Editable}, ShowSortButton={lootTargetInventoryDisplay.ShowSortButton} lootTargetInventoryDisplay.Target == PlayerStorage.Inventory:{lootTargetInventoryDisplay.Target == PlayerStorage.Inventory}");
+                ModLogger.Log.Debug($"Checking conditions for lootTargetInventoryDisplay({characterInventoryDisplay.Target?.DisplayName}): Editable={characterInventoryDisplay.Editable} | ShowSortButton={characterInventoryDisplay.ShowSortButton}");
+                ModLogger.Log.Debug($"Checking conditions for lootTargetInventoryDisplay({lootTargetInventoryDisplay.Target?.DisplayName}): Editable={lootTargetInventoryDisplay.Editable}, ShowSortButton={lootTargetInventoryDisplay.ShowSortButton} lootTargetInventoryDisplay.Target == PlayerStorage.Inventory:{lootTargetInventoryDisplay.Target == PlayerStorage.Inventory}");
 
                 SetupFilterGameObject(characterInventoryDisplayTransorm, characterInventoryDisplay, characterInventoryDisplayTransormshowspace).Forget();
                 SetupFilterGameObject(lootTargetInventoryDisplayTransform, lootTargetInventoryDisplay, lootTargetInventoryDisplayshowSpace, lootTargetInventoryDisplayshowDropdown).Forget();
                 timer.Stop();
-                ModLogger.Log.Info($"运行时长：{timer.ElapsedMilliseconds}ms");
+                ModLogger.Log.Debug($"运行时长：{timer.ElapsedMilliseconds}ms");
             }
             catch (Exception ex)
             {
@@ -107,7 +108,7 @@ namespace tinygrox.DuckovMods.GiveMeInventoryFilter
         private bool IsDropdownExisted(Transform parent, string path)
         {
             bool existed = parent?.Find(path)?.gameObject;
-            ModLogger.Log.Info($"IsDropdownExisted: {existed}");
+            ModLogger.Log.Debug($"IsDropdownExisted: {existed}");
             return existed;
         }
 
@@ -126,7 +127,6 @@ namespace tinygrox.DuckovMods.GiveMeInventoryFilter
         {
             // Debug.Log("[GiveMeInventoryFilter] LootViewFilter OnDisable");
             ManagedUIElement.onOpen -= OnInitialized;
-
         }
     }
 }

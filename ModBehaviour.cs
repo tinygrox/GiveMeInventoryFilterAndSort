@@ -10,6 +10,7 @@ using ItemStatsSystem;
 using Newtonsoft.Json;
 using SodaCraft.Localizations;
 using tinygrox.DuckovMods.GiveMeInventoryFilter.HarmonyPatches;
+using tinygrox.DuckovMods.SharedCode;
 using UnityEngine;
 using FormulasRegisterView = Duckov.UI.FormulasRegisterView;
 
@@ -21,39 +22,13 @@ namespace tinygrox.DuckovMods.GiveMeInventoryFilter
         private Harmony _harmony;
         public static GameObject DropdownObjTemplate;
 
-        private void LoadLanguageFile(SystemLanguage language)
-        {
-            string langName = language.ToString();
-            string langFilePath = GetLocalizationFilePath(langName);
-            if (!File.Exists(langFilePath))
-            {
-                langFilePath = GetLocalizationFilePath("English");
-
-                if(!File.Exists(langFilePath)) return;
-            }
-
-            string jsonContent = File.ReadAllText(langFilePath);
-            var localizedStrings = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonContent);
-
-            foreach (var pair in localizedStrings)
-            {
-                LocalizationManager.SetOverrideText(pair.Key, pair.Value);
-            }
-        }
-
-        private static string GetLocalizationFilePath(string langName)
-        {
-            string assemblyDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-
-            return assemblyDir != null ? Path.Combine(assemblyDir, "Localization", $"{langName}.json") : null;
-        }
         private void LoadSettings()
         {
             ModLogger.Instance.DefaultModName = "GiveMeInventoryFilter";
         }
         private void Awake()
         {
-            LoadLanguageFile(LocalizationManager.CurrentLanguage);
+            LocalizationUtility.LoadLanguageFile(LocalizationManager.CurrentLanguage);
             LoadSettings();
             _harmony = new Harmony(HarmonyId);
             _harmony.Patch(
@@ -84,7 +59,7 @@ namespace tinygrox.DuckovMods.GiveMeInventoryFilter
 
         protected override void OnAfterSetup()
         {
-            LocalizationManager.OnSetLanguage += LoadLanguageFile;
+            LocalizationManager.OnSetLanguage += LocalizationUtility.LoadLanguageFile;
             if (!gameObject.GetComponent<StockShopViewInventoryFilter>())
             {
                 gameObject.AddComponent<StockShopViewInventoryFilter>();
@@ -98,7 +73,7 @@ namespace tinygrox.DuckovMods.GiveMeInventoryFilter
 
         protected override void OnBeforeDeactivate()
         {
-            LocalizationManager.OnSetLanguage -= LoadLanguageFile;
+            LocalizationManager.OnSetLanguage -= LocalizationUtility.LoadLanguageFile;
             if (gameObject.TryGetComponent<StockShopViewInventoryFilter>(out var s))
             {
                 Destroy(s);

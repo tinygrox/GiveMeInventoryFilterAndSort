@@ -1,6 +1,8 @@
 using System;
 using Cysharp.Threading.Tasks;
 using Duckov.UI;
+using tinygrox.DuckovMods.SharedCode;
+
 // ReSharper disable InconsistentNaming
 
 namespace tinygrox.DuckovMods.GiveMeInventoryFilter.HarmonyPatches
@@ -19,7 +21,7 @@ namespace tinygrox.DuckovMods.GiveMeInventoryFilter.HarmonyPatches
                 var IFD = playerStorageInventory.GetComponentInChildren<InventoryFilterDisplay>();
                 if (IFD)
                 {
-                    StockShopViewInventoryFilter.SelectFilterEntryMethod(IFD, new object[] { 0 });
+                    StockShopViewInventoryFilter.SelectFilterEntryMethod(IFD, [0]);
                 }
             }
             catch (Exception e)

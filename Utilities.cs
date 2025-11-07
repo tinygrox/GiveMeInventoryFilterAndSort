@@ -7,6 +7,7 @@ using Duckov.UI;
 using Duckov.Utilities;
 using ItemStatsSystem;
 using SodaCraft.Localizations;
+using tinygrox.DuckovMods.SharedCode;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -288,7 +289,7 @@ namespace tinygrox.DuckovMods.GiveMeInventoryFilter
         }
         public static void AddDropdown(Transform inventoryDisplayTransform, InventoryDisplay inventoryDisplay, bool showSpace = true, bool showDropdown = true)
         {
-            ModLogger.Log.Info($"{inventoryDisplay.Target.DisplayName} showSpace:{showSpace}, showDropdown: {showDropdown}");
+            ModLogger.Log.Debug($"{inventoryDisplay.Target.DisplayName} showSpace:{showSpace}, showDropdown: {showDropdown}");
             // 我看过了只有 TitleBar (1) 有这个 HorizontalLayoutGroup
             var titleBar1 = inventoryDisplayTransform.GetComponentInChildren<HorizontalLayoutGroup>();
             if (!titleBar1)
@@ -391,7 +392,7 @@ namespace tinygrox.DuckovMods.GiveMeInventoryFilter
                         }
                     }
                 }
-                ModLogger.Log.Info($"{templateRect.name}'s MaxWidth: {maxWidth}");
+                ModLogger.Log.Debug($"{templateRect.name}'s MaxWidth: {maxWidth}");
                 templateRect.sizeDelta = new Vector2(maxWidth + 20f, dropdown.options.Count * 40f + 20f);
             }
         }
