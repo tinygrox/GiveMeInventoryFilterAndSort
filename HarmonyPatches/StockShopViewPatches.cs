@@ -1,33 +1,30 @@
 using System;
 using Cysharp.Threading.Tasks;
 using Duckov.UI;
-using tinygrox.DuckovMods.SharedCode;
+using tinygrox.DuckovMods.GiveMeInventoryFilter.SharedCode;
 
 // ReSharper disable InconsistentNaming
 
-namespace tinygrox.DuckovMods.GiveMeInventoryFilter.HarmonyPatches
+namespace tinygrox.DuckovMods.GiveMeInventoryFilter.HarmonyPatches;
+
+public static class StockShopViewPatches
 {
-    public static class StockShopViewPatches
+    public static void OnOpenPostfix(InventoryDisplay ___playerStorageDisplay) => AddFilterObjectAsync(___playerStorageDisplay).Forget();
+
+    private static async UniTaskVoid AddFilterObjectAsync(InventoryDisplay playerStorageInventory)
     {
-        public static void OnOpenPostfix(InventoryDisplay ___playerStorageDisplay)
+        try
         {
-            AddFilterObjectAsync(___playerStorageDisplay).Forget();
+            await UniTask.WaitUntil(() => playerStorageInventory);
+            InventoryFilterDisplay IFD = playerStorageInventory.GetComponentInChildren<InventoryFilterDisplay>();
+            if (IFD)
+            {
+                StockShopViewInventoryFilter.SelectFilterEntryMethod(IFD, [0]);
+            }
         }
-        private static async UniTaskVoid AddFilterObjectAsync(InventoryDisplay playerStorageInventory)
+        catch (Exception e)
         {
-            try
-            {
-                await UniTask.WaitUntil(() => playerStorageInventory);
-                var IFD = playerStorageInventory.GetComponentInChildren<InventoryFilterDisplay>();
-                if (IFD)
-                {
-                    StockShopViewInventoryFilter.SelectFilterEntryMethod(IFD, [0]);
-                }
-            }
-            catch (Exception e)
-            {
-                ModLogger.Log.Error($"[GiveMeInventoryFilter] {e}");
-            }
+            ModLogger.Log.Error($"[GiveMeInventoryFilter] {e}");
         }
     }
 }
