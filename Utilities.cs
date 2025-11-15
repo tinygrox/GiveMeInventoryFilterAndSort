@@ -10,7 +10,6 @@ using tinygrox.DuckovMods.GiveMeInventoryFilter.SharedCode;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Object = UnityEngine.Object;
 
 namespace tinygrox.DuckovMods.GiveMeInventoryFilter;
 
@@ -152,7 +151,7 @@ public class DropOptionsLocalization : MonoBehaviour
 
 public static class Utilities
 {
-    public static readonly Dictionary<InventoryDisplay, int> CurrentSortIndex = new();
+    public static readonly Dictionary<string, int> CurrentSortIndex = new();
 
     public static readonly List<string> DropdownOptions = new()
     {
@@ -179,7 +178,8 @@ public static class Utilities
         }
 
         Stopwatch timer = Stopwatch.StartNew();
-        CurrentSortIndex[inventoryDisplay] = currentIndex;
+        // 使用 inventoryDisplay.name 作为键来存储当前选择
+        CurrentSortIndex[inventoryDisplay.name] = currentIndex;
         bool isAscending;
         if (!inventoryDisplay)
         {
@@ -225,7 +225,8 @@ public static class Utilities
 
     public static (int SortType, bool IsAscending) GetCurrentSortState(InventoryDisplay inventoryDisplay)
     {
-        if (!CurrentSortIndex.TryGetValue(inventoryDisplay, out int index))
+        // 使用 inventoryDisplay.name 作为键来获取当前选择
+        if (!CurrentSortIndex.TryGetValue(inventoryDisplay.name, out int index))
         {
             index = 0;
         }
@@ -243,7 +244,8 @@ public static class Utilities
 
     public static int SetNewAscending(InventoryDisplay inventoryDisplay, bool newAscending)
     {
-        if (!CurrentSortIndex.TryGetValue(inventoryDisplay, out int currentIndex))
+        // 使用 inventoryDisplay.name 作为键来获取当前选择
+        if (!CurrentSortIndex.TryGetValue(inventoryDisplay.name, out int currentIndex))
         {
             currentIndex = 0;
         }
@@ -251,7 +253,8 @@ public static class Utilities
         int typeBase = currentIndex / 2 * 2;
 
         int newIndex = typeBase + (newAscending ? 1 : 0);
-        CurrentSortIndex[inventoryDisplay] = newIndex;
+        // 使用 inventoryDisplay.name 作为键来存储新选择
+        CurrentSortIndex[inventoryDisplay.name] = newIndex;
 
         return newIndex;
     }
@@ -332,15 +335,15 @@ public static class Utilities
 
         if (ModBehaviour.DropdownObjTemplate)
         {
-            dropdownObj = Object.Instantiate(ModBehaviour.DropdownObjTemplate);
+            dropdownObj = UnityEngine.Object.Instantiate(ModBehaviour.DropdownObjTemplate);
         }
         else
         {
-            ModBehaviour.DropdownObjTemplate = Object.Instantiate(GameObject.Find("GameManager (from Startup)/PauseMenu/Menu/OptionsPanel/ScrollView/Viewport/Content/Common/UI_Resolution/Dropdown"), null);
+            ModBehaviour.DropdownObjTemplate = UnityEngine.Object.Instantiate(GameObject.Find("GameManager (from Startup)/PauseMenu/Menu/OptionsPanel/ScrollView/Viewport/Content/Common/UI_Resolution/Dropdown"), null);
             if (ModBehaviour.DropdownObjTemplate)
             {
-                Object.DontDestroyOnLoad(ModBehaviour.DropdownObjTemplate);
-                dropdownObj = Object.Instantiate(ModBehaviour.DropdownObjTemplate);
+                UnityEngine.Object.DontDestroyOnLoad(ModBehaviour.DropdownObjTemplate);
+                dropdownObj = UnityEngine.Object.Instantiate(ModBehaviour.DropdownObjTemplate);
             }
             else
             {
@@ -381,6 +384,9 @@ public static class Utilities
                 dropdownComp.onValueChanged.RemoveAllListeners();
                 dropdownComp.onValueChanged.AddListener(delegate { DropdownValueChanged(dropdownComp, inventoryDisplay); });
                 PopulateDropdown(dropdownComp);
+                // 在 PopulateDropdown 之后，从 CurrentSortIndex 中加载上次的值，如果不存在则默认为 0
+                dropdownComp.value = CurrentSortIndex.TryGetValue(inventoryDisplay.name, out int lastValue) ? lastValue : 0;
+                dropdownComp.RefreshShownValue();
                 dropdownObj.AddComponent<DropOptionsLocalization>();
             }
 
