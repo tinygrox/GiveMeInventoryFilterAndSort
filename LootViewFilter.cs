@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using Cysharp.Threading.Tasks;
 using Duckov.UI;
 using tinygrox.DuckovMods.GiveMeInventoryFilter.SharedCode;
+using TMPro;
 using UnityEngine;
 
 namespace tinygrox.DuckovMods.GiveMeInventoryFilter;
@@ -86,7 +88,28 @@ public class LootViewFilter : MonoBehaviour
             if (IsDropdownExisted(characterInventoryDisplayTransorm, "TitleBar (1)/Filter_Dropdown") &&
                 IsDropdownExisted(lootTargetInventoryDisplayTransform, "TitleBar (1)/Filter_Dropdown"))
             {
-                Utilities.RefreshDropdownActive(lootTargetInventoryDisplayTransform.Find("TitleBar (1)/Filter_Dropdown").gameObject, lootTargetInventoryDisplayshowDropdown);
+                var dropdownObj = lootTargetInventoryDisplayTransform.Find("TitleBar (1)/Filter_Dropdown").gameObject;
+                Utilities.RefreshDropdownActive(dropdownObj, lootTargetInventoryDisplayshowDropdown);
+                if (dropdownObj.TryGetComponent(out TMP_Dropdown lootTargetdropdown))
+                {
+                    int currentSort = Utilities.CurrentSortIndex.GetValueOrDefault(lootTargetInventoryDisplay.Target.DisplayNameKey, 0);
+                    if (lootTargetdropdown.value != currentSort)
+                    {
+                        lootTargetdropdown.value = currentSort;
+                        lootTargetdropdown.RefreshShownValue();
+                    }
+                }
+
+                dropdownObj = characterInventoryDisplayTransorm.Find("TitleBar (1)/Filter_Dropdown").gameObject;
+                if (dropdownObj.TryGetComponent(out TMP_Dropdown characterDropdown))
+                {
+                    int currentSort = Utilities.CurrentSortIndex.GetValueOrDefault(characterInventoryDisplay.Target.DisplayNameKey, 0);
+                    if (characterDropdown.value != currentSort)
+                    {
+                        characterDropdown.value = currentSort;
+                        characterDropdown.RefreshShownValue();
+                    }
+                }
                 timer.Stop();
                 ModLogger.Log.Debug($"[提前结束]运行时长：{timer.ElapsedMilliseconds}ms");
                 return;

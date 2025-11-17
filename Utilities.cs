@@ -172,14 +172,14 @@ public static class Utilities
 
     public static void ExecuteSortByIndex(InventoryDisplay inventoryDisplay, int currentIndex)
     {
-        if (!inventoryDisplay)
+        if (!inventoryDisplay || !inventoryDisplay.Target)
         {
             return;
         }
 
         Stopwatch timer = Stopwatch.StartNew();
         // 使用 inventoryDisplay.name 作为键来存储当前选择
-        CurrentSortIndex[inventoryDisplay.name] = currentIndex;
+        CurrentSortIndex[inventoryDisplay.Target.DisplayNameKey] = currentIndex;
         bool isAscending;
         if (!inventoryDisplay)
         {
@@ -225,11 +225,9 @@ public static class Utilities
 
     public static (int SortType, bool IsAscending) GetCurrentSortState(InventoryDisplay inventoryDisplay)
     {
-        // 使用 inventoryDisplay.name 作为键来获取当前选择
-        if (!CurrentSortIndex.TryGetValue(inventoryDisplay.name, out int index))
-        {
-            index = 0;
-        }
+        if (!inventoryDisplay || !inventoryDisplay.Target) return (0, false);
+
+        int index = CurrentSortIndex.GetValueOrDefault(inventoryDisplay.Target.DisplayNameKey, 0);
 
         if (index < 0 || index >= DropdownOptions.Count)
         {
@@ -244,17 +242,14 @@ public static class Utilities
 
     public static int SetNewAscending(InventoryDisplay inventoryDisplay, bool newAscending)
     {
-        // 使用 inventoryDisplay.name 作为键来获取当前选择
-        if (!CurrentSortIndex.TryGetValue(inventoryDisplay.name, out int currentIndex))
-        {
-            currentIndex = 0;
-        }
+        if (!inventoryDisplay || !inventoryDisplay.Target) return 0;
+        int currentIndex = CurrentSortIndex.GetValueOrDefault(inventoryDisplay.Target.DisplayNameKey, 0);
 
         int typeBase = currentIndex / 2 * 2;
 
         int newIndex = typeBase + (newAscending ? 1 : 0);
         // 使用 inventoryDisplay.name 作为键来存储新选择
-        CurrentSortIndex[inventoryDisplay.name] = newIndex;
+        CurrentSortIndex[inventoryDisplay.Target.DisplayNameKey] = newIndex;
 
         return newIndex;
     }
@@ -323,6 +318,16 @@ public static class Utilities
         {
             GameObject existingDropdown = parent.GetComponentInChildren<DropOptionsLocalization>().gameObject;
             RefreshDropdownActive(existingDropdown, showDropdown);
+            if (existingDropdown.TryGetComponent(out TMP_Dropdown dropdown))
+            {
+                int currentSort = CurrentSortIndex.GetValueOrDefault(inventoryDisplay.Target.DisplayNameKey, 0);
+                if (dropdown.value != currentSort)
+                {
+                    dropdown.value = currentSort;
+                    dropdown.RefreshShownValue();
+                }
+            }
+
             return;
         }
 
@@ -330,6 +335,15 @@ public static class Utilities
         if (dropdownObj)
         {
             RefreshDropdownActive(dropdownObj, showDropdown);
+            if (dropdownObj.TryGetComponent(out TMP_Dropdown dropdown))
+            {
+                int currentSort = CurrentSortIndex.GetValueOrDefault(inventoryDisplay.Target.DisplayNameKey, 0);
+                if (dropdown.value != currentSort)
+                {
+                    dropdown.value = currentSort;
+                    dropdown.RefreshShownValue();
+                }
+            }
             return;
         }
 
@@ -385,7 +399,7 @@ public static class Utilities
                 dropdownComp.onValueChanged.AddListener(delegate { DropdownValueChanged(dropdownComp, inventoryDisplay); });
                 PopulateDropdown(dropdownComp);
                 // 在 PopulateDropdown 之后，从 CurrentSortIndex 中加载上次的值，如果不存在则默认为 0
-                dropdownComp.value = CurrentSortIndex.TryGetValue(inventoryDisplay.name, out int lastValue) ? lastValue : 0;
+                dropdownComp.value = CurrentSortIndex.GetValueOrDefault(inventoryDisplay.Target.DisplayNameKey, 0);
                 dropdownComp.RefreshShownValue();
                 dropdownObj.AddComponent<DropOptionsLocalization>();
             }

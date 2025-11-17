@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Duckov.Economy.UI;
 using Duckov.UI;
 using tinygrox.DuckovMods.GiveMeInventoryFilter.SharedCode;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -106,8 +108,15 @@ public class StockShopViewInventoryFilter : MonoBehaviour
             return;
         }
 
-        if (filterParent.transform.Find($"GiveMeInventoryFilter_FilterDisplay({filterParent.name})"))
+        if (filterParent.transform.Find($"GiveMeInventoryFilter_FilterDisplay({filterParent.name})") && filterParent.transform.Find("TitleBar (1)/Filter_Dropdown"))
         {
+            var dropdownObj = filterParent.transform.Find("TitleBar (1)/Filter_Dropdown").gameObject;
+            if (dropdownObj.TryGetComponent(out TMP_Dropdown dropdown))
+            {
+                int currentSort = Utilities.CurrentSortIndex.GetValueOrDefault(targetInventoryDisplay.Target.DisplayNameKey, 0);
+                dropdown.value = currentSort;
+                dropdown.RefreshShownValue();
+            }
             return;
         }
 
